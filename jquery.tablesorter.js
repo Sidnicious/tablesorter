@@ -298,8 +298,7 @@
 			
 				for(var i = 0; i < table.tHead.rows.length; i++) { tableHeadersRows[i]=0; };
 				
-				$tableHeaders = $("thead th",table);
-		
+				$tableHeaders = $("th",table.config.headerRow ? table.tHead.rows[table.config.headerRow] : table.tHead);
 				$tableHeaders.each(function(index) {
 							
 					this.count = 0;
