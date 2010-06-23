@@ -192,20 +192,23 @@
 				if(table.config.debug) { var cacheTime = new Date(); }
 				
 				
-				var totalRows = (table.tBodies[0] && table.tBodies[0].rows.length) || 0,
-					totalCells = (table.tBodies[0].rows[0] && table.tBodies[0].rows[0].cells.length) || 0,
+				var bodies = table.tBodies,
+					sortBodies = bodies.length > 1,
+					totalRows = sortBodies ? bodies[0].rows.length && bodies.length : bodies[0] && bodies[0].rows.length || 0,
+					totalCells = (bodies[0].rows[0] && bodies[0].rows[0].cells.length) || 0,
 					parsers = table.config.parsers, 
-					cache = {row: [], normalized: []};
+					cache = {row: [], normalized: [], sortBodies: sortBodies};
 				
 					for (var i=0;i < totalRows; ++i) {
 					
 						/** Add the table data to main data array */
-						var c = table.tBodies[0].rows[i], cols = [];
+						var c = sortBodies ? bodies[i] : bodies[0].rows[i], cols = [], cell;
 					
 						cache.row.push($(c));
 						
 						for(var j=0; j < totalCells; ++j) {
-							cols.push(parsers[j].format(getElementText(table.config,c.cells[j]),table,c.cells[j]));	
+							cell = sortBodies ? c.rows[0].cells[j] : c.cells[j];
+							cols.push(parsers[j].format(getElementText(table.config,cell),table,cell));	
 						}
 												
 						cols.push(i); // add position for rowCache
@@ -249,7 +252,7 @@
 					n= c.normalized, 
 					totalRows = n.length, 
 					checkCell = (n[0].length-1), 
-					tableBody = $(table.tBodies[0]),
+					tableBody = c.sortBodies ? $(table) : $(table.tBodies[0]),
 					rows = [];
 				
 				for (var i=0;i < totalRows; i++) {
