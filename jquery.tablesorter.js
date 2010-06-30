@@ -644,14 +644,20 @@
 				});
 			};
 			
-			this.addParser = function(parser) {
+			this.addParser = function(parser, important) {
 				var l = parsers.length, a = true;
 				for(var i=0; i < l; i++) {
 					if(parsers[i].id.toLowerCase() == parser.id.toLowerCase()) {
 						a = false;
 					}
 				}
-				if(a) { parsers.push(parser); };
+				if(a) {
+					if (important === true) {
+						parsers.splice(1, 0, parser);
+					} else {
+						parsers.push(parser);
+					}
+				};
 			};
 			
 			this.addWidget = function(widget) {
